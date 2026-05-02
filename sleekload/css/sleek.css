@@ -1,0 +1,478 @@
+/* ============================================================
+   SLEEKLOAD - THÈME BATTLE READY POKÉMON RP
+   ============================================================ */
+
+@font-face {
+    font-family: "Comfortaa";
+    src: url("fonts/Comfortaa-Regular.otf") format("opentype");
+}
+
+@font-face {
+    font-family: "Open Sans";
+    src: url("fonts/OpenSans-Regular.ttf") format("truetype");
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: "Open Sans";
+    src: url("fonts/OpenSans-Bold.ttf") format("truetype");
+    font-weight: bold;
+}
+
+html {
+    background-color: #000;
+}
+
+body, html {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    font-family: 'Courier New', monospace;
+    -webkit-font-smoothing: antialiased;
+    font-size: 16px;
+    color: #FAFAFA;
+    text-shadow: 2px 2px 0 #1A1A1A, 0 0 12px rgba(0,0,0,0.6);
+    display: none;
+}
+
+/* ============================================================
+   GRILLE ÉLECTRONIQUE en arrière-plan
+   ============================================================ */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(198,40,40,0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(198,40,40,0.08) 1px, transparent 1px);
+    background-size: 50px 50px;
+    z-index: 1;
+    pointer-events: none;
+    animation: gridPulse 4s ease-in-out infinite;
+}
+
+@keyframes gridPulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.6; }
+}
+
+/* ============================================================
+   SCANLINES retro CRT
+   ============================================================ */
+body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent 0,
+        transparent 2px,
+        rgba(0,0,0,0.15) 2px,
+        rgba(0,0,0,0.15) 3px
+    );
+    pointer-events: none;
+    z-index: 99;
+}
+
+/* ============================================================
+   VIDEO BACKGROUND
+   ============================================================ */
+video {
+    display: block;
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    filter: brightness(0.7) contrast(1.15) saturate(1.2);
+}
+
+#video-container {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+}
+
+#player {
+    position: absolute;
+    z-index: -99;
+    display: none;
+}
+
+/* ============================================================
+   OVERLAY sombre + vignette
+   ============================================================ */
+#overlay {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    background: 
+        radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.7) 100%),
+        radial-gradient(circle at center, rgba(198,40,40,0.15) 0%, transparent 50%);
+}
+
+/* ============================================================
+   HEADER avec logo
+   ============================================================ */
+#header {
+    margin: 30px;
+    position: relative;
+    z-index: 10;
+    text-align: center;
+}
+
+#title {
+    font-family: 'Arial Black', 'Impact', sans-serif;
+    font-size: 64px;
+    font-weight: 900;
+    letter-spacing: 6px;
+    line-height: 1;
+    color: #FFEB3B;
+    text-shadow:
+        4px 4px 0 #C62828,
+        8px 8px 0 #1A1A1A,
+        0 0 30px rgba(255,235,59,0.5);
+    text-transform: uppercase;
+    animation: titleEntry 1s ease-out, titleShake 0.4s ease-in-out infinite;
+    display: inline-block;
+}
+
+@keyframes titleEntry {
+    from { opacity: 0; transform: scale(0.85) translateY(-30px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes titleShake {
+    0%, 100% { transform: translate(0, 0); }
+    25% { transform: translate(-1px, 1px); }
+    75% { transform: translate(1px, -1px); }
+}
+
+#title-text {
+    line-height: 70px;
+    font-family: 'Arial Black', 'Impact', sans-serif;
+}
+
+#title-image {
+    max-height: 140px;
+    filter: drop-shadow(0 4px 16px rgba(255,235,59,0.5)) drop-shadow(0 0 30px rgba(198,40,40,0.6));
+    animation: logoPulse 2s ease-in-out infinite;
+}
+
+@keyframes logoPulse {
+    0%, 100% { transform: scale(1); filter: drop-shadow(0 4px 16px rgba(255,235,59,0.5)); }
+    50% { transform: scale(1.03); filter: drop-shadow(0 4px 24px rgba(255,235,59,0.8)); }
+}
+
+.center #title-image {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#title img {
+    display: block;
+}
+
+/* Sous-titre map/gamemode */
+#subtitle {
+    margin-top: 12px;
+    display: none;
+    font-size: 14px;
+    color: #FF6B6B;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    text-shadow: 2px 2px 0 #1A1A1A;
+}
+
+.gamemode, .map {
+    color: #FFEB3B;
+    font-style: normal;
+    font-weight: bold;
+    text-shadow: 1px 1px 0 #1A1A1A, 0 0 8px rgba(255,235,59,0.4);
+}
+
+/* ============================================================
+   STATUS / BARRE DE PROGRESSION CENTRALE
+   ============================================================ */
+#status-container {
+    position: absolute;
+    width: 70%;
+    height: auto;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 10;
+}
+
+#status-left, #status-right {
+    display: inline-block;
+    margin-bottom: 12px;
+    font-size: 14px;
+    letter-spacing: 3px;
+    text-shadow: 2px 2px 0 #1A1A1A;
+}
+
+#status-left {
+    float: left;
+    color: #FAFAFA;
+}
+
+#status-right {
+    float: right;
+    color: #FFEB3B;
+    font-weight: 900;
+    font-size: 18px;
+}
+
+/* Barre de progression Battle Ready */
+#loading {
+    display: inline-block;
+    width: 100%;
+    height: 22px;
+    background: rgba(0,0,0,0.7);
+    border: 3px solid #FFEB3B;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow:
+        inset 0 2px 4px rgba(0,0,0,0.7),
+        0 0 20px rgba(255,235,59,0.4);
+    clear: both;
+    margin-top: 36px;
+}
+
+#loading-progress {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg,
+        #C62828 0%,
+        #FF8C00 30%,
+        #FFEB3B 60%,
+        #FAFAFA 100%
+    );
+    box-shadow: 0 0 16px rgba(255,235,59,0.8);
+    border-radius: 0;
+    transition: width 0.3s ease-out;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Bandes diagonales animées */
+#loading-progress::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+        45deg,
+        transparent 0, transparent 10px,
+        rgba(255,255,255,0.15) 10px, rgba(255,255,255,0.15) 20px
+    );
+    animation: stripeMove 1s linear infinite;
+}
+
+@keyframes stripeMove {
+    from { background-position: 0 0; }
+    to { background-position: 40px 0; }
+}
+
+/* Highlight brillant en haut */
+#loading-progress::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.5), transparent);
+}
+
+/* ============================================================
+   MESSAGES rotatifs
+   ============================================================ */
+#messages {
+    display: none;
+    margin-top: 24px;
+    font-size: 18px;
+    line-height: 28px;
+    padding: 14px 24px;
+    background: rgba(0,0,0,0.85);
+    border: 2px solid #5DCAA5;
+    border-left: 6px solid #5DCAA5;
+    border-radius: 6px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.5), 0 0 20px rgba(93,202,165,0.2);
+    color: #FAFAFA;
+    text-shadow: 1px 1px 0 #1A1A1A;
+    letter-spacing: 1px;
+}
+
+/* ============================================================
+   MUSIQUE en bas gauche
+   ============================================================ */
+#music {
+    position: absolute;
+    left: 20px;
+    bottom: 20px;
+    display: none;
+    line-height: 22px;
+    font-size: 12px;
+    width: auto;
+    max-width: 50%;
+    padding: 12px 18px;
+    background: rgba(0,0,0,0.85);
+    border: 2px solid #FFEB3B;
+    border-radius: 6px;
+    box-shadow: 0 0 16px rgba(255,235,59,0.3);
+    z-index: 10;
+    color: #FFEB3B;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+#music-name {
+    margin-top: 4px;
+    font-size: 14px;
+    color: #FAFAFA;
+    text-transform: none;
+    letter-spacing: 1px;
+    font-weight: normal;
+}
+
+#enable-audio {
+    position: absolute;
+    left: 20px;
+    bottom: 20px;
+    display: none;
+    font-size: 20px;
+    padding: 12px 20px;
+    border-radius: 6px;
+    max-width: 50%;
+    font-weight: bold;
+    background: linear-gradient(180deg, #FFEB3B, #FBC02D);
+    color: #1A1A1A;
+    border: 2px solid #1A1A1A;
+    box-shadow: 0 0 20px rgba(255,235,59,0.5);
+    text-shadow: none;
+    letter-spacing: 2px;
+    z-index: 10;
+}
+
+#enable-audio:hover {
+    cursor: pointer;
+    transform: scale(1.05);
+    box-shadow: 0 0 30px rgba(255,235,59,0.8);
+}
+
+/* ============================================================
+   ERREURS (gardé sobre)
+   ============================================================ */
+#error-box {
+    position: absolute;
+    margin: 12px;
+    top: 0;
+    right: 0;
+    max-width: 40%;
+    min-width: 100px;
+    z-index: 100;
+}
+
+.error {
+    position: relative;
+    padding: 8px 12px;
+    background-color: rgba(231, 76, 60, 0.9);
+    border-radius: 4px;
+    margin-top: 6px;
+    border: 1px solid #C62828;
+}
+
+.error-title {
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+
+.close-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 6px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-button:hover {
+    color: #FFEB3B;
+}
+
+/* Warn (msg fallback) */
+#warn {
+    display: none;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: 99;
+    background-color: black;
+    color: white;
+    padding: 20px;
+    top: 0;
+    left: 0;
+}
+
+.center {
+    text-align: center;
+}
+
+/* ============================================================
+   ÉCLAIRS DÉCORATIFS - Ajoutés via ::before/::after sur header
+   ============================================================ */
+#header::before {
+    content: '⚡';
+    position: fixed;
+    top: 30px;
+    left: 30px;
+    font-size: 60px;
+    color: #FFEB3B;
+    text-shadow: 0 0 20px rgba(255,235,59,0.7);
+    animation: lightningFlash 3s ease-in-out infinite;
+    transform: rotate(-15deg);
+    z-index: 5;
+    text-decoration: none;
+}
+
+#header::after {
+    content: '⚡';
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    font-size: 60px;
+    color: #FFEB3B;
+    text-shadow: 0 0 20px rgba(255,235,59,0.7);
+    animation: lightningFlash 3s ease-in-out infinite;
+    animation-delay: 0.7s;
+    transform: rotate(15deg) scaleX(-1);
+    z-index: 5;
+}
+
+@keyframes lightningFlash {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 768px) {
+    #title { font-size: 38px; letter-spacing: 3px; }
+    #title-image { max-height: 90px; }
+    #subtitle { font-size: 11px; letter-spacing: 2px; }
+    #status-container { width: 90%; }
+    #header::before, #header::after { font-size: 40px; }
+}
