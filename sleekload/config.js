@@ -33,7 +33,7 @@ config.background_overlay = true
 config.background_darkening = 60
 
 // MUSIQUE 8-bit Pokémon
-config.music_enable = true
+config.music_enable = false
 config.music_show = true
 config.music_volume = 30
 config.music_gmod_volume = true
